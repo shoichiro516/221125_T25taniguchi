@@ -1,0 +1,27 @@
+.talk:before{
+    content:'';
+    display:inline-block;
+    width:250px;
+    height:50px;
+    vertical-align:top;
+    border-radius:50%;
+    background-size:cover;
+}
+
+.talk p:before{
+    content:'';
+    position:absolute;
+    top:12px;
+    left:-20px;
+    border:12px solid transparent;
+    border-right:12px solid: greenyellow;
+}
+
+.talk p{
+    display:inline-block;
+    position:relative;
+    background-color: greenyellow;
+    border-radius:10px;
+    padding:10px;
+    margin:0 0 0 10px;
+}

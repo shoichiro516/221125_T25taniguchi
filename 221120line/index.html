@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>なんちゃってLINE</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+    #output{
+        background-color: rgb(92, 177, 252);
+        height: 300px;
+        overflow: scroll;
+    }
+</style>
+
+</head>
+<body>
+
+<!-- コンテンツ表示画面 -->
+<div class="talk">
+    <div> 名前：<input type="text" id="uname"> </div>
+    <div>
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button id="send">送信</button>
+    </div>
+    <div id="output" style="overflow: auto; height: 300px;"
+    ></div>
+</div>
+
+
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<!--** 以下Firebase **-->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onChildAdded, remove,onChildRemoved } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvVYr-nOoaQv7yoknPu8QdpOAqG4vOabs",
+      authDomain: "dev245-f0361.firebaseapp.com",
+      projectId: "dev245-f0361",
+      storageBucket: "dev245-f0361.appspot.com",
+      messagingSenderId: "538935626241",
+      appId: "1:538935626241:web:0c33afc4dd26c42b520e00"
+    };
+  
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'dev245');
+
+// 送信処理を記述（クリック）
+$('#send').on('click', function(){
+        const uname =$('#uname').val();
+        const text =$('#text').val()
+    const msg={
+        uname:$('#uname').val(),
+        text:$('#text').val()
+    };
+    const newPostRef=push(dbRef);
+    set(newPostRef,msg);
+    $('#uname').val("");
+    $('#text').val("");
+    $("#uname").focus();
+});
+
+// 送信処理を記述（erter）
+$('#text').on('keydown', function(e){
+// console.log(e); 
+if(e.keyCode==13){
+    const msg={
+        uname:$('#uname').val(),
+        text:$('#text').val(),
+    }
+    const newPostRef=push(dbRef);
+    set(newPostRef,msg);
+}
+});
+
+
+
+// 受信処理を記録
+onChildAdded(dbRef, function(data){
+    const msg = data.val();
+    const key = data.key;
+    let h = `
+    <div>
+    <p>${msg.uname}</p>
+    <p>${msg.text}</p>
+    </div>
+    `;
+    $("#output").append(h);
+    })
+
+
+</script>
+
+
+</body>
+</html>
